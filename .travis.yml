@@ -1,0 +1,31 @@
+language: generic 
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t satyambaran/react-test -f ./client/Dockerfile.dev .
+
+script:
+  - docker run -e CI=true satyambaran/react-test npm test
+
+after_success:
+  - docker build -t satyambaran/multi-client ./client
+  - docker build -t satyambaran/multi-nginx ./nginx
+  - docker build -t satyambaran/multi-server ./server
+  - docker build -t satyambaran/multi-worker ./worker
+
+  # docker run cont_id npm run test -- --coverage
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-north-1"
+  app: "docker"
+  env: "Docker-env"
+  bucket_name: elasticbeanstalk-eu-north-1-080569059057
+  bucket_path: "docker"
+  on:
+    branch: master
+    # 93 94
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
+
+  # git checkout -b feature
