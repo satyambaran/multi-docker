@@ -13,19 +13,24 @@ after_success:
   - docker build -t satyambaran/multi-nginx ./nginx
   - docker build -t satyambaran/multi-server ./server
   - docker build -t satyambaran/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push satyambaran/multi-client
+  - docker push satyambaran/multi-nginx
+  - docker push satyambaran/multi-server
+  - docker push satyambaran/multi-worker
 
-  # docker run cont_id npm run test -- --coverage
-deploy:
-  provider: elasticbeanstalk
-  region: "eu-north-1"
-  app: "docker"
-  env: "Docker-env"
-  bucket_name: elasticbeanstalk-eu-north-1-080569059057
-  bucket_path: "docker"
-  on:
-    branch: master
-    # 93 94
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: "$AWS_SECRET_KEY"
+#   # docker run cont_id npm run test -- --coverage
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "eu-north-1"
+#   app: "docker"
+#   env: "Docker-env"
+#   bucket_name: elasticbeanstalk-eu-north-1-080569059057
+#   bucket_path: "docker"
+#   on:
+#     branch: master
+#     # 93 94
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: "$AWS_SECRET_KEY"
 
-  # git checkout -b feature
+#   # git checkout -b feature
