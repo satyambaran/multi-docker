@@ -2,6 +2,6 @@ FROM node:14.14.0-alpine
 WORKDIR /app
 COPY ./server/package.json .
 RUN npm install
-COPY . .
+COPY ./server/ .
 CMD [ "npm", "run", "dev" ]
 # due to nodemon, it'll restart after every change automatically
